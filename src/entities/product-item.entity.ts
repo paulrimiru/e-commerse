@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { Base } from './base';
 import { Order } from './order.entity';
@@ -9,9 +9,15 @@ export class ProductItem extends Base {
   @Column({ unique: true })
   serialNumber: string;
 
-  @ManyToOne(type => Product, product => product.items)
+  @ManyToOne(
+    type => Product,
+    product => product.items,
+  )
   product: Promise<Product>;
 
-  @ManyToOne(type => Order, order => order.items)
-  order: Promise<Order>;
+  @ManyToOne(
+    type => Order,
+    order => order.items,
+  )
+  order: Order;
 }
