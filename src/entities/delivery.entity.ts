@@ -32,9 +32,13 @@ export class Delivery extends Base {
   })
   type: DeliveryType;
 
-  @OneToMany(type => Order, order => order.delivery, {
-    eager: true,
-    cascade: true,
-  })
+  @OneToMany(
+    type => Order,
+    order => order.delivery,
+    {
+      eager: true,
+      cascade: true,
+    },
+  )
   orders: Order[];
 }

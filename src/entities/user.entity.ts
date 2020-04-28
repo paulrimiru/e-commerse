@@ -37,7 +37,11 @@ export class User extends Base {
   @Exclude()
   protected password: string;
 
-  @OneToMany(type => Order, order => order.user, { lazy: true })
+  @OneToMany(
+    type => Order,
+    order => order.user,
+    { lazy: true },
+  )
   orders: Promise<Order[]>;
 
   async setPassword(password) {

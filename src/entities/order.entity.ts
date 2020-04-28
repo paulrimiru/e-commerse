@@ -38,15 +38,26 @@ export class Order extends Base {
   })
   orderStatus: OrderStatus;
 
-  @OneToMany(type => ProductItem, productItem => productItem.order, {
-    eager: true,
-    cascade: true,
-  })
+  @OneToMany(
+    type => ProductItem,
+    productItem => productItem.order,
+    {
+      eager: true,
+      cascade: true,
+    },
+  )
   items: ProductItem[];
 
-  @ManyToOne(type => User, user => user.orders, { eager: true, cascade: true })
+  @ManyToOne(
+    type => User,
+    user => user.orders,
+    { eager: true, cascade: true },
+  )
   user: User;
 
-  @ManyToOne(type => Delivery, delivery => delivery.orders)
+  @ManyToOne(
+    type => Delivery,
+    delivery => delivery.orders,
+  )
   delivery: Promise<Delivery>;
 }

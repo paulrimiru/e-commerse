@@ -23,10 +23,16 @@ export class Product extends Base {
   @Column('simple-array')
   pictures: string[];
 
-  @OneToMany(type => ProductItem, productItem => productItem.product)
+  @OneToMany(
+    type => ProductItem,
+    productItem => productItem.product,
+  )
   @Exclude({ toPlainOnly: true })
   items: Promise<ProductItem[]>;
 
-  @ManyToOne(type => Category, category => category.products)
+  @ManyToOne(
+    type => Category,
+    category => category.products,
+  )
   category: Promise<Category>;
 }

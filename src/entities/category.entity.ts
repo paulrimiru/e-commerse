@@ -14,6 +14,9 @@ export class Category extends Base {
   @Column()
   picture: string;
 
-  @OneToMany(type => Product, product => product.category)
+  @OneToMany(
+    type => Product,
+    product => product.category,
+  )
   products: Product[];
 }

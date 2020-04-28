@@ -30,7 +30,9 @@ export class ProductItemService {
     );
 
     product.items = Promise.resolve(
-      Array.from(new Set<ProductItem[]>([newItems.concat(existingItems)]))[0],
+      Array.from(
+        new Set<ProductItem[]>([newItems.concat(existingItems)]),
+      )[0],
     );
 
     return await this.productService.saveProduct(product);
