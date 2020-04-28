@@ -1,7 +1,7 @@
+import { Injectable } from '@nestjs/common';
+
 // tslint:disable-next-line: no-var-requires
 const nodemailer = require('nodemailer');
-
-import { Injectable } from '@nestjs/common';
 
 const from = '"Jacetech Solutions" <noreply@jacetechno.com>';
 
@@ -27,12 +27,17 @@ export class EmailService {
   transport;
   constructor() {
     this.transport = nodemailer.createTransport({
-      host: 'mail.jacetechno.com',
+      host: 'smtp.gmail.com',
       port: 465,
       secure: true,
       auth: {
+        type: 'OAuth2',
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        clientId: process.env.EMAILCLIENT,
+        clientSecret: process.env.EMAILCLIENTSECRET,
+        refreshToken: process.env.EMAILREFRESHTOKEN,
+        accessToken: process.env.EMAILACCESSTOKEN,
+        expires: process.env.EMAILEXPIRES,
       },
     });
   }
