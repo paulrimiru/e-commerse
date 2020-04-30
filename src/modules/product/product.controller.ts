@@ -6,6 +6,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Post,
   Put,
@@ -20,7 +21,11 @@ import { RolesGuard } from '../auth/roles.guard';
 import { UpdateCategoryDto } from '../category/category.dto';
 import { CategoryService } from '../category/category.service';
 import { ProductItemService } from '../product-item/product-item.service';
-import { CreateProductDto, CreateProductItemDto } from './product.dto';
+import {
+  CreateProductDto,
+  CreateProductItemDto,
+  SearchQueryDto,
+} from './product.dto';
 import { ProductService } from './product.service';
 
 @UseInterceptors(ResponseTransformInterceptor)
@@ -32,7 +37,9 @@ export class ProductController {
     private readonly productItemService: ProductItemService,
   ) {}
 
-  @Get(':id')
+  private readonly logger = new Logger(ProductController.name);
+
+  @Get('single/:id')
   async getProductById(@Param('id') id: string) {
     const product = await this.productService.getProductById(id);
 
@@ -56,6 +63,12 @@ export class ProductController {
     return (await this.productService.getAllProducts()).map(product =>
       classToPlain(product),
     );
+  }
+
+  @Get('search')
+  async searchProducts(@Query() { name }: SearchQueryDto) {
+    const products = await this.productService.searchProduct(name);
+    return classToPlain(products);
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)

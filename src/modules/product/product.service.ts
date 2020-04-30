@@ -1,8 +1,9 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import matchSorter from 'match-sorter';
+import { Like, Repository } from 'typeorm';
 
-import { Product } from '@/entities/product.entity';
 import { Category } from '@/entities/category.entity';
+import { Product } from '@/entities/product.entity';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import { PRODUCT_REPOSITORY } from './constants';
 import { CreateProductDto } from './product.dto';
@@ -13,6 +14,8 @@ export class ProductService {
     @Inject(PRODUCT_REPOSITORY)
     private readonly productRepository: Repository<Product>,
   ) {}
+
+  private readonly logger = new Logger(ProductService.name);
 
   async getAllProducts() {
     return await this.productRepository.find();
@@ -35,6 +38,17 @@ export class ProductService {
           id: categoryId,
         },
       },
+    });
+  }
+
+  async searchProduct(searchString: string) {
+    const products = await this.productRepository.find({
+      name: Like(`%${searchString}%`),
+    });
+
+    return matchSorter(products, searchString, {
+      keys: ['name'],
+      threshold: matchSorter.rankings.CONTAINS,
     });
   }
 

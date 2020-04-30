@@ -1,6 +1,7 @@
 import * as compression from 'compression';
 import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
+import * as morgan from 'morgan';
 
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -20,7 +21,10 @@ async function bootstrap() {
     }),
   );
   app.use(compression());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({ validationError: { target: false, value: false } }),
+  );
+  app.use(morgan('dev'));
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

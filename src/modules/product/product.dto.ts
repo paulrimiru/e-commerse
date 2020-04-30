@@ -1,5 +1,12 @@
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsUUID,
+} from 'class-validator';
+
 import { Unit } from '@/entities/unit-price';
-import { IsNotEmpty, IsEnum, IsNumber, IsUUID } from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -49,4 +56,10 @@ export class UpdateProductDto {
 export class CreateProductItemDto {
   @IsNotEmpty()
   items: string[];
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class SearchQueryDto {
+  @IsString()
+  name: string;
 }
