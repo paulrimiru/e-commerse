@@ -1,31 +1,26 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UseGuards,
-  Get,
-  Req,
-  UseInterceptors,
-  NotFoundException,
-  Put,
-  BadRequestException,
-} from '@nestjs/common';
 import { classToPlain } from 'class-transformer';
-import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 
 import { UserService } from '@/modules/user/user.service';
 import { ResponseTransformInterceptor } from '@/utils/response-transform.interceptor';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Post,
+  Put,
+  Req,
+  UseInterceptors,
+} from '@nestjs/common';
 
+import { EmailService } from '../email/email.service';
+import { PasswordResetService } from '../password-reset/password-reset.service';
 import {
   CreateUserDto,
   RequestPasswordResetDto,
   ResetPasswordDto,
 } from './validation.dto';
-import { Roles } from '../auth/roles.decorator';
-import { RolesGuard } from '../auth/roles.guard';
-import { EmailService } from '../email/email.service';
-import { PasswordResetService } from '../password-reset/password-reset.service';
 
 @UseInterceptors(ResponseTransformInterceptor)
 @Controller('user')
@@ -52,8 +47,6 @@ export class UserController {
     return classToPlain(user);
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('user')
   @Get('profile')
   async getProfile(@Req() req) {
     const user = await this.userService.findByEmail(req.user.email);

@@ -1,27 +1,27 @@
-import {
-  Controller,
-  UseInterceptors,
-  Get,
-  Post,
-  Body,
-  Param,
-  Query,
-  UseGuards,
-  Delete,
-  Put,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { classToPlain } from 'class-transformer';
 
 import { ResponseTransformInterceptor } from '@/utils/response-transform.interceptor';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
-import { ProductService } from './product.service';
-import { CreateProductDto, CreateProductItemDto } from './product.dto';
-import { CategoryService } from '../category/category.service';
-import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 import { UpdateCategoryDto } from '../category/category.dto';
+import { CategoryService } from '../category/category.service';
 import { ProductItemService } from '../product-item/product-item.service';
+import { CreateProductDto, CreateProductItemDto } from './product.dto';
+import { ProductService } from './product.service';
 
 @UseInterceptors(ResponseTransformInterceptor)
 @Controller('product')
@@ -32,8 +32,6 @@ export class ProductController {
     private readonly productItemService: ProductItemService,
   ) {}
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('user')
   @Get(':id')
   async getProductById(@Param('id') id: string) {
     const product = await this.productService.getProductById(id);
@@ -41,8 +39,6 @@ export class ProductController {
     return classToPlain(product);
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('user')
   @Get()
   async getProductsByCategory(@Query() query: { category: string }) {
     if (query.category) {
@@ -108,8 +104,6 @@ export class ProductController {
     return { id: productId };
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('user')
   @Get('items/:id')
   async getProductItems(@Param('id') id: string) {
     return await this.productItemService.getProductItemsByProductId(id);
