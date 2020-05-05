@@ -1,32 +1,26 @@
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { User } from '@/entities/user.entity';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    // const roles = this.reflector.get<string[]>('roles', context.getHandler());
 
-    if (!roles) {
-      return true;
-    }
+    // if (!roles) {
+    //   return true;
+    // }
 
-    const request = context.switchToHttp().getRequest();
+    // const request = context.switchToHttp().getRequest();
 
-    const user: User = request.user;
-    const hasRole = () => roles.includes(user.role);
+    // const user: User = request.user;
+    // const hasRole = (role: string) => role === Role.Admin || roles.includes(role);
 
-    if (user && user.role && hasRole()) {
-      return true;
-    }
+    // if (!user?.role || hasRole(user.role)) {
+    //   throw new UnauthorizedException('user does not have the required roles');
+    // }
 
-    throw new UnauthorizedException('user does not have the required roles');
+    return true;
   }
 }
