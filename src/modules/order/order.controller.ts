@@ -1,33 +1,27 @@
-import {
-  Controller,
-  Body,
-  Post,
-  UseGuards,
-  Request,
-  Get,
-  UseInterceptors,
-  Put,
-  Param,
-  Delete,
-  Query,
-  Patch,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { ResponseTransformInterceptor } from '@/utils/response-transform.interceptor';
 import { IRequest } from '@/utils/interfaces';
+import { ResponseTransformInterceptor } from '@/utils/response-transform.interceptor';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  Request,
+  UseInterceptors,
+} from '@nestjs/common';
 
-import { OrderService } from './order.service';
 import { CreateOrderDto, UpdateOrderStatusDto } from './order.dto';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
+import { OrderService } from './order.service';
 
 @UseInterceptors(ResponseTransformInterceptor)
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('user')
   @Post()
   async createOrder(
     @Request() request: IRequest,
@@ -36,15 +30,11 @@ export class OrderController {
     return await this.orderService.createOrder(orderDetails, request.user);
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('user')
   @Get()
   async getOrder(@Request() request: IRequest) {
     return await this.orderService.getUserOrders(request.user.id);
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('user')
   @Put(':id')
   async updateOrder(
     @Request() request: IRequest,
@@ -58,8 +48,6 @@ export class OrderController {
     );
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('user')
   @Patch(':id')
   async updateOrderStatus(
     @Request() request: IRequest,
@@ -73,8 +61,6 @@ export class OrderController {
     );
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('user')
   @Delete(':id')
   async deleteOrder(@Request() request: IRequest, @Param('id') id: string) {
     return await this.orderService.deleteOrder(id, request.user.id);

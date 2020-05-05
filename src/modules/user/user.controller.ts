@@ -11,12 +11,9 @@ import {
   Post,
   Put,
   Req,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 
-import { RolesGuard } from '../auth/roles.guard';
 import { EmailService } from '../email/email.service';
 import { PasswordResetService } from '../password-reset/password-reset.service';
 import {
@@ -50,7 +47,6 @@ export class UserController {
     return classToPlain(user);
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('profile')
   async getProfile(@Req() req) {
     const user = await this.userService.findByEmail(req.user.email);

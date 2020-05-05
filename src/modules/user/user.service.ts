@@ -38,7 +38,7 @@ export class UserService {
     user.username = userDetails.username;
 
     // todo change this back
-    user.role = Role.Admin;
+    user.role = Role.User;
 
     await user.setPassword(userDetails.password);
 

@@ -1,26 +1,14 @@
+import { PasswordResetModule } from '@/modules/password-reset/password-reset.module';
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
 
-import { PasswordResetModule } from '@/modules/password-reset/password-reset.module';
-
-import { AuthService } from './auth.service';
-import { jwtConstants } from './constants';
 import { UserModule } from '../user/user.module';
-import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 @Module({
-  imports: [
-    UserModule,
-    PasswordResetModule,
-    PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60m' },
-    }),
-  ],
-  providers: [AuthService, JwtStrategy],
+  imports: [UserModule, PasswordResetModule, PassportModule],
+  providers: [AuthService],
   controllers: [AuthController],
   exports: [AuthService],
 })
