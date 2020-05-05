@@ -11,6 +11,7 @@
     "start": "node dist/main.js",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
+    "predevelop": "yarn build",
     "develop": "NODE_ENV=dev run-p --race setup:db start:debug",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "fix:lint": "tslint -c tslint.json -p tsconfig.json --fix",
