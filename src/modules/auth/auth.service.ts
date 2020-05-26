@@ -1,6 +1,7 @@
 import { User } from '@/entities/user.entity';
 import { UserService } from '@/modules/user/user.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class AuthService {

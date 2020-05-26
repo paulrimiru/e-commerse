@@ -12,16 +12,23 @@ import {
   Query,
   Request,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 
 import { CreateOrderDto, UpdateOrderStatusDto } from './order.dto';
 import { OrderService } from './order.service';
-
+import { Order } from '@/entities/order.entity';
+import { Scope } from '../auth/roles.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/roles.guard';
+import { OrderPermission } from '@/utils/entities-permissions';
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @UseInterceptors(ResponseTransformInterceptor)
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  @Scope(OrderPermission.Create)
   @Post()
   async createOrder(
     @Request() request: IRequest,
@@ -30,11 +37,13 @@ export class OrderController {
     return await this.orderService.createOrder(orderDetails, request.user);
   }
 
+  @Scope(OrderPermission.Get)
   @Get()
   async getOrder(@Request() request: IRequest) {
     return await this.orderService.getUserOrders(request.user.id);
   }
 
+  @Scope(OrderPermission.Update)
   @Put(':id')
   async updateOrder(
     @Request() request: IRequest,
@@ -48,6 +57,7 @@ export class OrderController {
     );
   }
 
+  @Scope(OrderPermission.Update)
   @Patch(':id')
   async updateOrderStatus(
     @Request() request: IRequest,
@@ -61,6 +71,7 @@ export class OrderController {
     );
   }
 
+  @Scope(OrderPermission.Delete)
   @Delete(':id')
   async deleteOrder(@Request() request: IRequest, @Param('id') id: string) {
     return await this.orderService.deleteOrder(id, request.user.id);
