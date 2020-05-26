@@ -1,11 +1,13 @@
 import { User } from '@/entities/user.entity';
 import { UserService } from '@/modules/user/user.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { RolesService } from '../roles/roles.service';
-
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UserService) {}
+  constructor(
+    private readonly usersService: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async validateUser(email: string, pass: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
@@ -25,7 +27,7 @@ export class AuthService {
 
   async generateToken({ email, id }: User) {
     return {
-      access_token: 'coming soon, lets get everything done first',
+      access_token: this.jwtService.sign({ email, sub: id }),
     };
   }
 }
