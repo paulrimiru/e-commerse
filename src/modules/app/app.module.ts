@@ -13,11 +13,13 @@ import { AuthModule } from '../auth/auth.module';
 import { ProductModule } from '../product/product.module';
 import { OrderModule } from '../order/order.module';
 import { DeliveryModule } from '../delivery/delivery.module';
+import { RolesModule } from '../roles/roles.module';
 
 @Module({
   imports: [
     ConfigModule,
     UserModule,
+    RolesModule,
     AuthModule,
     ProductModule,
     OrderModule,

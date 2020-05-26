@@ -12,6 +12,7 @@ import {
   Put,
   Query,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 
 import { UpdateCategoryDto } from '../category/category.dto';
@@ -23,6 +24,13 @@ import {
   SearchQueryDto,
 } from './product.dto';
 import { ProductService } from './product.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/roles.guard';
+import {
+  ProductPermission,
+  ProductItemPermission,
+} from '@/utils/entities-permissions';
+import { Scope } from '../auth/roles.decorator';
 
 @UseInterceptors(ResponseTransformInterceptor)
 @Controller('product')
@@ -67,6 +75,8 @@ export class ProductController {
     return classToPlain(products);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Scope(ProductPermission.Create)
   @Post()
   async createProduct(@Body() productData: CreateProductDto) {
     const category = await this.categoryService.getCategoryById(
@@ -81,11 +91,15 @@ export class ProductController {
     return classToPlain(product);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Scope(ProductPermission.Delete)
   @Delete(':id')
   async deleteProduct(@Param('id') id: string) {
     return await this.productService.deleteProduct(id);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Scope(ProductPermission.Update)
   @Put(':id')
   async updateProduct(
     @Param('id') id: string,
@@ -94,6 +108,8 @@ export class ProductController {
     return await this.productService.updateProduct(id, updates);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Scope(ProductItemPermission.Create)
   @Post('items/:id')
   async addProductItem(
     @Param('id') id: string,
@@ -110,12 +126,16 @@ export class ProductController {
     return await this.productItemService.getProductItemsByProductId(id);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Scope(ProductItemPermission.Delete)
   @Delete('items/:id')
   async deleteProductItems(@Param('id') id: string) {
     await this.productItemService.deleteProductItem(id);
     return { id };
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Scope(ProductItemPermission.Update)
   @Put('items/:id')
   async updateProductItems(
     @Param('id') id: string,
