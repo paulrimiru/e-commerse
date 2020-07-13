@@ -1,3 +1,4 @@
+import { OrderPermission } from '@/utils/entities-permissions';
 import { IRequest } from '@/utils/interfaces';
 import { ResponseTransformInterceptor } from '@/utils/response-transform.interceptor';
 import {
@@ -11,17 +12,16 @@ import {
   Put,
   Query,
   Request,
-  UseInterceptors,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
+import { Scope } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 import { CreateOrderDto, UpdateOrderStatusDto } from './order.dto';
 import { OrderService } from './order.service';
-import { Order } from '@/entities/order.entity';
-import { Scope } from '../auth/roles.decorator';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../auth/roles.guard';
-import { OrderPermission } from '@/utils/entities-permissions';
+
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @UseInterceptors(ResponseTransformInterceptor)
 @Controller('order')

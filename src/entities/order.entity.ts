@@ -1,9 +1,9 @@
-import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { Base } from './base';
+import { Delivery } from './delivery.entity';
 import { ProductItem } from './product-item.entity';
 import { User } from './user.entity';
-import { Delivery } from './delivery.entity';
 
 export enum OrderStatus {
   Cart = 'cart',
@@ -51,7 +51,7 @@ export class Order extends Base {
   @ManyToOne(
     type => User,
     user => user.orders,
-    { eager: true, cascade: true },
+    { eager: true, cascade: false },
   )
   user: User;
 

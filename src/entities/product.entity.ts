@@ -1,15 +1,18 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { Base } from './base';
-import { UnitPrice } from './unit-price';
 import { Category } from './category.entity';
 import { ProductItem } from './product-item.entity';
-import { Exclude } from 'class-transformer';
+import { UnitPrice } from './unit-price';
 
 @Entity()
 export class Product extends Base {
   @Column({ unique: true })
   name: string;
+
+  @Column({ nullable: true })
+  description?: string;
 
   @Column(type => UnitPrice)
   unitPrice: UnitPrice;

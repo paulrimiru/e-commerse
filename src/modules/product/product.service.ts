@@ -64,6 +64,7 @@ export class ProductService {
     };
     product.discount = productData.discount;
     product.pictures = productData.pictures;
+    product.description = productData.description;
     product.category = Promise.resolve(category);
 
     return await this.productRepository.save(product);
