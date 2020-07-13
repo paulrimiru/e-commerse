@@ -22,8 +22,10 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "setup:db": "docker-compose up || 0",
     "typeorm:cli": "./node_modules/.bin/typeorm",
+    "premigration:generate": "yarn migration:run",
     "migration:generate": "yarn typeorm:cli -- migration:generate",
     "clean:migrations": "rm -rf ./build && yarn build:app",
+    "premigration:run": "yarn build",
     "migration:run": "run-s build migration:run:raw",
     "migration:run:raw": "yarn run typeorm:cli -- migration:run",
     "migration:revert": "yarn typeorm:cli -- migration:revert"
