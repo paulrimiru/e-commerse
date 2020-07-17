@@ -1,8 +1,7 @@
-import { Entity, Column, OneToMany } from 'typeorm';
-
-import { Order } from './order.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 import { Base } from './base';
+import { Order } from './order.entity';
 
 export enum DeliveryStatus {
   Preperation = 'preperation',

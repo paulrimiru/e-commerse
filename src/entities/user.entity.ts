@@ -1,16 +1,11 @@
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { IsEmail } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import { genSalt, hash, compare } from 'bcrypt';
 
 import { Base } from './base';
 import { Order } from './order.entity';
-
-export enum Role {
-  Admin = 'admin',
-  User = 'user',
-  Unverified = 'un-verified',
-}
+import { Role } from './role.entity';
 
 @Entity()
 export class User extends Base {
@@ -26,11 +21,16 @@ export class User extends Base {
   })
   verified: boolean;
 
-  @Column({
-    type: 'enum',
-    enum: Role,
-    default: Role.Unverified,
-  })
+  @ManyToOne(
+    type => Role,
+    role => role.users,
+    {
+      nullable: true,
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      eager: true,
+    },
+  )
   role: Role;
 
   @Column()

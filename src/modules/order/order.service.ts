@@ -23,8 +23,8 @@ export class OrderService {
     private readonly productItemService: ProductItemService,
   ) {}
 
-  async createOrder({ products: items, address }: CreateOrderDto, user: User) {
-    const { productItems, totalPrice } = await this.getProductItems(items);
+  async createOrder({ products, address }: CreateOrderDto, user: User) {
+    const { productItems, totalPrice } = await this.getProductItems(products);
 
     const order = new Order();
     order.items = productItems;
@@ -88,6 +88,7 @@ export class OrderService {
         const product = await this.productItemService.getProductItemsByProductId(
           id,
         );
+
         const [prodItems, prod] = await Promise.all([
           Promise.all(
             product.map(async item => ({ ...item, order: await item.order })),

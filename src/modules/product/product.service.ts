@@ -1,5 +1,5 @@
 import matchSorter from 'match-sorter';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { Category } from '@/entities/category.entity';
 import { Product } from '@/entities/product.entity';
@@ -42,9 +42,10 @@ export class ProductService {
   }
 
   async searchProduct(searchString: string) {
-    const products = await this.productRepository.find({
-      name: Like(`%${searchString}%`),
-    });
+    const products = await this.productRepository
+      .createQueryBuilder()
+      .where(`LOWER(name) = LOWER(:searchString)`, { searchString })
+      .getMany();
 
     return matchSorter(products, searchString, {
       keys: ['name'],
@@ -63,6 +64,7 @@ export class ProductService {
     };
     product.discount = productData.discount;
     product.pictures = productData.pictures;
+    product.description = productData.description;
     product.category = category;
 
     return await this.productRepository.save(product);

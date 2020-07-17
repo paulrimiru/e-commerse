@@ -1,9 +1,10 @@
 import { Repository } from 'typeorm';
 
-import { Role, User } from '@/entities/user.entity';
+import { User } from '@/entities/user.entity';
 import { USER_REPOSITORY } from '@/utils/constants';
 import { IUser } from '@/utils/interfaces';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class UserService {
@@ -36,9 +37,6 @@ export class UserService {
     const user = new User();
     user.email = userDetails.email;
     user.username = userDetails.username;
-
-    // todo change this back
-    user.role = Role.User;
 
     await user.setPassword(userDetails.password);
 

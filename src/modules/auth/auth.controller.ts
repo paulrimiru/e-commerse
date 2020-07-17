@@ -11,11 +11,11 @@ import {
 } from '@nestjs/common';
 
 import { UserService } from '@/modules/user/user.service';
-import { Role } from '@/entities/user.entity';
 import { ResponseTransformInterceptor } from '@/utils/response-transform.interceptor';
 
 import { AuthService } from '../auth/auth.service';
 import { LoginUserDto } from '../user/validation.dto';
+import { RolesService } from '../roles/roles.service';
 
 @UseInterceptors(ResponseTransformInterceptor)
 @Controller()
@@ -23,6 +23,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly roleService: RolesService,
   ) {}
 
   @Post('auth/login')
@@ -43,14 +44,17 @@ export class AuthController {
   async verify(@Param('token') token: string) {
     const id = this.userService.decode(token);
 
-    const user = await this.userService.findById(id);
+    const [user, defaultRole] = await Promise.all([
+      this.userService.findById(id),
+      this.roleService.getDefaultRole(),
+    ]);
 
     if (!user) {
       throw new BadRequestException('invalid token provided');
     }
 
     user.verified = true;
-    user.role = Role.User;
+    user.role = defaultRole;
 
     await this.userService.updateUser(user);
 

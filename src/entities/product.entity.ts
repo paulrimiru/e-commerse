@@ -11,6 +11,9 @@ export class Product extends Base {
   @Column({ unique: true })
   name: string;
 
+  @Column({ nullable: true })
+  description?: string;
+
   @Column(type => UnitPrice)
   unitPrice: UnitPrice;
 

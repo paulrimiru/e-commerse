@@ -1,12 +1,12 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { Repository } from 'typeorm';
 
 import { ProductItem } from '@/entities/product-item.entity';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
-import { ProductService } from '../product/product.service';
 import { PRODUCT_ITEM_REPOSITORY } from '../product/constants';
 import { CreateProductItemDto } from '../product/product.dto';
+import { ProductService } from '../product/product.service';
 
 @Injectable()
 export class ProductItemService {
@@ -76,6 +76,6 @@ export class ProductItemService {
   async getProductItemsByProductId(productId: string) {
     const product = await this.productService.getProductById(productId);
 
-    return await product.items;
+    return (await product.items) || [];
   }
 }

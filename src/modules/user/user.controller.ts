@@ -2,6 +2,7 @@ import { classToPlain } from 'class-transformer';
 import { Request } from 'express';
 
 import { UserService } from '@/modules/user/user.service';
+import { UserPermission } from '@/utils/entities-permissions';
 import { ResponseTransformInterceptor } from '@/utils/response-transform.interceptor';
 import {
   Body,
@@ -14,6 +15,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 
+import { Scope } from '../auth/roles.decorator';
 import { EmailService } from '../email/email.service';
 import { PasswordResetService } from '../password-reset/password-reset.service';
 import {
@@ -48,6 +50,7 @@ export class UserController {
   }
 
   @Get('profile')
+  @Scope(UserPermission.View)
   async getProfile(@Req() req) {
     const user = await this.userService.findByEmail(req.user.email);
     return classToPlain(user);

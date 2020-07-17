@@ -22,8 +22,10 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "setup:db": "docker-compose up || 0",
     "typeorm:cli": "./node_modules/.bin/typeorm",
+    "premigration:generate": "yarn migration:run",
     "migration:generate": "yarn typeorm:cli -- migration:generate",
     "clean:migrations": "rm -rf ./build && yarn build:app",
+    "premigration:run": "yarn build",
     "migration:run": "run-s build migration:run:raw",
     "migration:run:raw": "yarn run typeorm:cli -- migration:run",
     "migration:revert": "yarn typeorm:cli -- migration:revert"
@@ -64,6 +66,7 @@
     "compression": "^1.7.4",
     "dotenv": "^8.1.0",
     "express-rate-limit": "^5.0.0",
+    "googleapis": "^52.1.0",
     "helmet": "^3.21.1",
     "match-sorter": "^4.1.0",
     "module-alias": "^2.2.2",

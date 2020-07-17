@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 // tslint:disable-next-line: no-var-requires
 const nodemailer = require('nodemailer');
 
-const from = '"Jacetech Solutions" <noreply@jacetechno.com>';
+// tslint:disable-next-line: no-var-requires
+const { google } = require('googleapis');
+
+const OAuth2 = google.auth.OAuth2;
+
+const from = 'MyEshop.Ke<myeshop.254@gmail.com>';
 
 export interface BaseEmailInfo {
   receiver: string;
@@ -25,7 +30,21 @@ export type EmailInfo = BaseEmailInfo &
 @Injectable()
 export class EmailService {
   transport;
+  private readonly logger = new Logger(EmailService.name);
   constructor() {
+    const OAUTH_PLAYGROUND = 'https://developers.google.com/oauthplayground';
+    const myOAuth2Client = new OAuth2(
+      process.env.EMAILCLIENT,
+      process.env.EMAILCLIENTSECRET,
+      OAUTH_PLAYGROUND,
+    );
+
+    myOAuth2Client.setCredentials({
+      refresh_token: process.env.EMAILREFRESHTOKEN,
+    });
+
+    const myAccessToken = myOAuth2Client.getAccessToken();
+
     this.transport = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -36,13 +55,12 @@ export class EmailService {
         clientId: process.env.EMAILCLIENT,
         clientSecret: process.env.EMAILCLIENTSECRET,
         refreshToken: process.env.EMAILREFRESHTOKEN,
-        accessToken: process.env.EMAILACCESSTOKEN,
-        expires: process.env.EMAILEXPIRES,
+        accessToken: myAccessToken,
       },
     });
   }
 
-  sendMail(emailInfo: EmailInfo) {
+  async sendMail(emailInfo: EmailInfo) {
     let email: { [key: string]: string } = {
       from,
       to: emailInfo.receiver,
@@ -89,6 +107,12 @@ export class EmailService {
         break;
     }
 
-    this.transport.sendMail(email);
+    try {
+      this.logger.debug('sending email');
+      await this.transport.sendMail(email);
+      this.logger.debug('sent');
+    } catch (error) {
+      this.logger.error(error.stack);
+    }
   }
 }

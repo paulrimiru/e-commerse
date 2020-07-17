@@ -13,6 +13,9 @@ export class CreateProductDto {
   name: string;
 
   @IsNotEmpty()
+  description: string;
+
+  @IsNotEmpty()
   @IsEnum(Unit)
   unit: Unit;
 
