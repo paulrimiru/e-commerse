@@ -63,7 +63,7 @@ export class ProductService {
     };
     product.discount = productData.discount;
     product.pictures = productData.pictures;
-    product.category = Promise.resolve(category);
+    product.category = category;
 
     return await this.productRepository.save(product);
   }

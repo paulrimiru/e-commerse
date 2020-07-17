@@ -1,10 +1,10 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { Base } from './base';
-import { UnitPrice } from './unit-price';
 import { Category } from './category.entity';
 import { ProductItem } from './product-item.entity';
-import { Exclude } from 'class-transformer';
+import { UnitPrice } from './unit-price';
 
 @Entity()
 export class Product extends Base {
@@ -33,6 +33,7 @@ export class Product extends Base {
   @ManyToOne(
     type => Category,
     category => category.products,
+    { eager: true },
   )
-  category: Promise<Category>;
+  category: Category;
 }
